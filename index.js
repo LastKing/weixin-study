@@ -3,6 +3,9 @@
  */
 var express = require('express');
 var weixin = require('./weixin-api');
+var request = require('superagent');
+
+var menuTxt = require('./menu');
 
 var app = express();
 
@@ -115,9 +118,40 @@ weixin.eventMsg(function (msg) {
   console.log(JSON.stringify(msg));
 });
 
-function createMenu() {
-  var url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN';
+var appId = 'wx752daac4ef847b71';
+var token = 'qbtest';
+var appSecret = 'd4624c36b6795d1d99dcf0547af5443d';
+
+var AccessToken = 'FQG12_thrAKU-io8rNRX0Zgkze-psOxlI8PftGCnw3yVfQVIGW2eJzUmWpQErDk2NpYokevkgC9i-xkQfoK-JSomeActhNnDV2kfByfUsjtBn4-AgDVw_t9cqO8BRWBMBUFdACAOHS';
+
+function getAccessToken() {
+  var url = `https://api.weixin.qq.com/cgi-bin/token`;
+
+  request.get(url)
+      .set('Content-Type', 'application/json')
+      .query({"grant_type": "client_credential"})
+      .query({"appid": appId})
+      .query({"secret": appSecret})
+      .end(function (err, result) {
+        token = result;
+        console.log(result);
+      })
 }
+// getAccessToken();
+
+function createMenu() {
+  var url = `https://api.weixin.qq.com/cgi-bin/menu/create`;
+
+  request.post(url)
+      .set('Content-Type', 'application/json')
+      .query({access_token: AccessToken})
+      .send({"body": menuTxt})
+      .end(function (err, result) {
+        console.log(err);
+        console.log(result);
+      })
+}
+createMenu();
 
 // Start
 app.post('/', function (req, res) {

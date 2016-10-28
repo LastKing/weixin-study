@@ -1,12 +1,9 @@
-/**
- * Created by Rain on 2016/10/28.
- */
-exports.test = {
+{
   "button": [
     {
-      "type": "click",
-      "name": "干你大爷",
-      "key": "V1001_TODAY_MUSIC"
+      "type": "view",
+      "name": "我要下单",
+      "url": "http://www.soso.com/"
     },
     {
       "name": "菜单",
@@ -25,6 +22,8 @@ exports.test = {
           "type": "click",
           "name": "赞一下我们",
           "key": "V1001_GOOD"
-        }]
-    }]
-};
+        }
+      ]
+    }
+  ]
+}
