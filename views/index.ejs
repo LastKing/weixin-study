@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input type="button" id="getAccessToken" value="获取token">
+<p id="AccessToken"><%= AccessToken %></p>
+
+<input type="button" id="getMenu" value="获取菜单">
+
+<input type="button" id="createMenu" value="创建菜单">
+<p id="menu"></p>
+
+
+<script src="/public/js/jquery-3.1.1.min.js"></script>
+
+<script>
+    $('#getAccessToken').on('click', function () {
+        $.post('/token/getAccessToken', function (data) {
+            var AccessToken = data;
+            console.log(data);
+            $('#AccessToken').text(data);
+        })
+    });
+
+    $('#getMenu').on('click', function () {
+        $.get('/menu/getMenu', function (data) {
+            var str = "<ul>";
+            data.menu.button.forEach(function (result) {
+                str += `<li> ${result.name}`;
+                if (result.sub_button.length != 0) {
+                    str += `<ul>`;
+                    result.sub_button.forEach(function (result2) {
+                        str += `<li><a href="${result2.url}">${result2.name}</a></li>`;
+                    });
+                    str += `</ul>`
+                }
+                str += `</li>`;
+            });
+
+            str += "</ul>"
+            $('#menu').html(str);
+        })
+    });
+
+    $('#createMenu').on('click', function () {
+        $.post('/menu/createMenu', function (data) {
+            $('#menu').html(JSON.stringify(data));
+        })
+    });
+</script>
+</body>
+</html>

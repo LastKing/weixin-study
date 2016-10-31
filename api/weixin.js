@@ -1,28 +1,10 @@
 /**
- * Created by Rain on 2016/10/27.
+ * Created by Rain on 2016/10/31.
  */
-var express = require('express');
-var weixin = require('./weixin-api');
-var request = require('superagent');
+var weixin = require('../weixin-api');
+var config = require('../config/development.json');
 
-var menuTxt = require('./menu');
-
-var app = express();
-
-// 接入验证
-app.get('/', function (req, res) {
-  console.log('test');
-
-  // 签名成功
-  if (weixin.checkSignature(req)) {
-    res.status(200).send(req.query.echostr);
-  } else {
-    res.status(200).send('fail');
-  }
-});
-
-// config 根据自己的实际配置填写
-weixin.token = 'qbtest';
+weixin.token = config.token;
 
 // 监听文本消息
 weixin.textMsg(function (msg) {
@@ -117,48 +99,3 @@ weixin.eventMsg(function (msg) {
   console.log("eventMsg received");
   console.log(JSON.stringify(msg));
 });
-
-var appId = 'wx752daac4ef847b71';
-var token = 'qbtest';
-var appSecret = 'd4624c36b6795d1d99dcf0547af5443d';
-
-var AccessToken = 'FQG12_thrAKU-io8rNRX0Zgkze-psOxlI8PftGCnw3yVfQVIGW2eJzUmWpQErDk2NpYokevkgC9i-xkQfoK-JSomeActhNnDV2kfByfUsjtBn4-AgDVw_t9cqO8BRWBMBUFdACAOHS';
-
-function getAccessToken() {
-  var url = `https://api.weixin.qq.com/cgi-bin/token`;
-
-  request.get(url)
-      .set('Content-Type', 'application/json')
-      .query({"grant_type": "client_credential"})
-      .query({"appid": appId})
-      .query({"secret": appSecret})
-      .end(function (err, result) {
-        token = result;
-        console.log(result);
-      })
-}
-// getAccessToken();
-
-function createMenu() {
-  var url = `https://api.weixin.qq.com/cgi-bin/menu/create`;
-
-  request.post(url)
-      .set('Content-Type', 'application/json')
-      .query({access_token: AccessToken})
-      .send({"body": menuTxt})
-      .end(function (err, result) {
-        console.log(err);
-        console.log(result);
-      })
-}
-createMenu();
-
-// Start
-app.post('/', function (req, res) {
-
-  // loop
-  weixin.loop(req, res);
-
-});
-
-app.listen(80);
