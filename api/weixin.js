@@ -1,7 +1,7 @@
 /**
  * Created by Rain on 2016/10/31.
  */
-var weixin = require('../weixin-api');
+var weixin = require('../common/weixin-api');
 var config = require('../config/development.json');
 
 weixin.token = config.token;

@@ -6,7 +6,7 @@ var router = express.Router();
 
 var fs = require('fs');
 
-var weixin = require('../weixin-api');
+var weixin = require('../common/weixin-api');
 require('../api/weixin');
 
 router.get('/', function (req, res) {
@@ -26,8 +26,7 @@ router.post('/', function (req, res) {
 router.get('/index.html', function (req, res) {
   var result = {};
 
-
-  result.AccessToken = require('../config/development.json').AccessToken;
+  result.AccessToken = require('../api/accessToken').get();
 
   res.render('index', result);
 });

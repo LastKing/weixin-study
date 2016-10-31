@@ -21,7 +21,9 @@ function create() {
 }
 
 function get() {
+  var config = require('../config/development.json');
 
+  return config.AccessToken;
 }
 
-module.exports = {create};
+module.exports = {create, get};

@@ -13,10 +13,8 @@ router.get('/getMenu', async(req, res) => {
 });
 
 router.post('/createMenu', async(req, res)=> {
-  var menuTxt = require('../menu.json');
-
+  var menuTxt = require('./menu.json');
   var result = await Menu.createMenu(menuTxt);
-
   res.send(result);
 });
 
