@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<% include base/header.ejs %>
 
 <input type="button" id="getAccessToken" value="获取token">
 <p id="AccessToken"><%= AccessToken %></p>
@@ -14,8 +8,10 @@
 <input type="button" id="createMenu" value="创建菜单">
 <p id="menu"></p>
 
+<input type="button" id="getUser" value="获得用户">
+<p id="user"></p>
 
-<script src="/public/js/jquery-3.1.1.min.js"></script>
+<% include base/script.ejs %>
 
 <script>
     $('#getAccessToken').on('click', function () {
@@ -52,5 +48,14 @@
         })
     });
 </script>
-</body>
-</html>
+
+<script>
+    $('#getUser').on('click', function () {
+        $.get('/user/get.do', function (data) {
+            $('#user').html(JSON.stringify(data));
+        })
+    });
+
+</script>
+
+<% include base/footer.ejs %>
