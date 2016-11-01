@@ -22,40 +22,25 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/token', token);
-app.use('/menu', menu);
-app.use('/user', user);
+app.use('/', routes);  //管理页面和
+app.use('/token', token);//token 管理
+app.use('/menu', menu);//菜单管理
+app.use('/user', user);//用户管理
 
 
-// catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
+
+  if (app.get('env') === 'development') err = {};
   res.render('error', {
     message: err.message,
-    error: {}
+    error: err
   });
 });
 

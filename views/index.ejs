@@ -1,18 +1,24 @@
 <% include base/header.ejs %>
+<div class="container">
 
-<input type="button" id="getAccessToken" value="获取token">
-<p id="AccessToken"><%= AccessToken %></p>
+    <input class="btn btn-default" type="button" id="getAccessToken" value="获取token">
+    <p id="AccessToken"><%= AccessToken %></p>
 
-<input type="button" id="getMenu" value="获取菜单">
+    <input class="btn btn-default" type="button" id="getMenu" value="获取菜单（会获得个性化菜单）">
+    <input class="btn btn-default" type="button" id="createMenu" value="创建菜单">
+    <input class="btn btn-default" type="button" id="deleteMenu" value="删除菜单">
+    <input class="btn btn-default" type="button" id="addConditionalMenu" value="创建个性化菜单">
+    <input class="btn btn-default" type="button" id="delconditionalMenu" value="删除个性化菜单">
+    <p id="menu"></p>
 
-<input type="button" id="createMenu" value="创建菜单">
-<p id="menu"></p>
+    <input class="btn btn-default" type="button" id="getUser" value="获得用户">
+    <p id="user"></p>
 
-<input type="button" id="getUser" value="获得用户">
-<p id="user"></p>
+</div>
 
 <% include base/script.ejs %>
 
+<!-- access token script -->
 <script>
     $('#getAccessToken').on('click', function () {
         $.post('/token/getAccessToken', function (data) {
@@ -21,11 +27,34 @@
             $('#AccessToken').text(data);
         })
     });
+</script>
 
+<!-- menu script -->
+<script>
     $('#getMenu').on('click', function () {
         $.get('/menu/getMenu', function (data) {
+            if (data.errcode) {
+                $('#menu').html(data.errcode + '-----' + data.errmsg);
+            } else {
+                //1.自定义菜单
+                var str = getButtonHtml(data.menu.button);
+
+                //2.个性化菜单
+                if (data.conditionalmenu) {
+                    data.conditionalmenu.forEach(function (data) {
+                        str += `<br/>${data.menuid}+    `;
+                        str += `<input type='radio' name='conditionalmenuId' value="${data.menuid}" />`;
+                        str += `${JSON.stringify(data.matchrule)}`;
+                        str += getButtonHtml(data.button);
+                    })
+                }
+                $('#menu').html(str);
+            }
+        })
+
+        function getButtonHtml(data) {
             var str = "<ul>";
-            data.menu.button.forEach(function (result) {
+            data.forEach(function (result) {
                 str += `<li> ${result.name}`;
                 if (result.sub_button.length != 0) {
                     str += `<ul>`;
@@ -36,16 +65,34 @@
                 }
                 str += `</li>`;
             });
-
             str += "</ul>"
-            $('#menu').html(str);
-        })
+            return str;
+        }
     });
 
     $('#createMenu').on('click', function () {
         $.post('/menu/createMenu', function (data) {
             $('#menu').html(JSON.stringify(data));
         })
+    });
+
+    $('#deleteMenu').on('click', function () {
+        $.get('/menu/remove.do', function (data) {
+            $('#menu').html(JSON.stringify(data));
+        });
+    });
+
+    $('#addConditionalMenu').on('click', function () {
+        $.post('/menu/addConditional.do', function (data) {
+            $('#menu').html(JSON.stringify(data));
+        });
+    });
+
+    $('#delconditionalMenu').on('click', function () {
+        var result = $('input[name="conditionalmenuId"]:checked').val();
+        $.post('/menu/delconditional.do', {menuId: result}, function (data) {
+            $('#menu').html(JSON.stringify(data));
+        });
     });
 </script>
 
@@ -55,7 +102,6 @@
             $('#user').html(JSON.stringify(data));
         })
     });
-
 </script>
 
 <% include base/footer.ejs %>

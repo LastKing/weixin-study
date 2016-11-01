@@ -24,17 +24,16 @@ Weixin.prototype.checkSignature = function (req) {
   this.nonce = req.query.nonce;
   this.echostr = req.query.echostr;
 
-  // 按照字典排序
+  // 1.按照字典排序
   var array = [this.token, this.timestamp, this.nonce];
   array.sort();
 
-  // 连接
+  // 2.将三个参数字符串进行字符串拼接
   var str = sha1(array.join(""));
 
-  // 对比签名
+  // 3.与来自微信的signature 进行比对
   return str == this.signature;
 };
-
 
 // ------------------ 监听 ------------------------
 // 监听文本消息
