@@ -40,7 +40,6 @@ weixin.textMsg(function (msg) {
       break;
 
     case "图文" :
-
       var articles = [];
       articles[0] = {
         title: "PHP依赖管理工具Composer入门",
@@ -69,6 +68,16 @@ weixin.textMsg(function (msg) {
         toUserName: msg.fromUserName,
         msgType: "news",
         articles: articles,
+        funcFlag: 0
+      };
+      break;
+    default:
+      // 返回文本消息
+      resMsg = {
+        fromUserName: msg.toUserName,
+        toUserName: msg.fromUserName,
+        msgType: "text",
+        content: "您说啥，我听不懂。。。",
         funcFlag: 0
       };
   }
