@@ -2,7 +2,7 @@
 <div class="container">
 
     <input class="btn btn-default" type="button" id="getAccessToken" value="获取token">
-    <p id="AccessToken"><%= AccessToken %></p>
+    <p id="AccessToken" style="overflow: hidden"><%= AccessToken %></p>
 
     <input class="btn btn-default" type="button" id="getMenu" value="获取菜单（会获得个性化菜单）">
     <input class="btn btn-default" type="button" id="createMenu" value="创建菜单">
@@ -16,6 +16,13 @@
 
     <input class="btn btn-default" type="button" id="addKF" value="添加客服">
     <p id="kfAccount"></p>
+
+    <input class="btn btn-default" type="button" id="tempUpload" value="上传临时素材">
+    <input class="btn btn-default" type="button" id="getTempUpload" value="获取临时素材">
+    <input class="btn btn-default" type="button" id="getCount" value="获取素材总数">
+    <input class="btn btn-default" type="button" id="add_material" value="上传永久素材">
+    <input class="btn btn-default" type="button" id="get_material" value="获取永久素材">
+    <p id="upload"></p>
 
 </div>
 
@@ -99,7 +106,7 @@
     });
 </script>
 
-<!-- 用户获取 -->
+<!-- user script -->
 <script>
     $('#getUser').on('click', function () {
         $.get('/user/get.do', function (data) {
@@ -108,11 +115,44 @@
     });
 </script>
 
-<!--  -->
+<!-- kfAccount script  -->
 <script>
     $('#addKF').on('click', function () {
         $.post('/kfaccount/add.do', function (data) {
             $('#kfAccount').html(JSON.stringify(data));
+        })
+    });
+</script>
+
+<!-- upload script-->
+<script>
+    $('#tempUpload').on('click', function () {
+        $.post('/upload/tempUpload.do', function (data) {
+            $('#upload').html(JSON.stringify(data));
+        })
+    });
+
+    $('#getTempUpload').on('click', function () {
+        $.get('/upload/getTempUpload.do', function (data) {
+            $('#upload').html(JSON.stringify(data));
+        })
+    });
+
+    $('#getCount').on('click', function () {
+        $.get('/upload/getStaticCount.do', function (data) {
+            $('#upload').html(JSON.stringify(data));
+        })
+    });
+
+    $('#add_material').on('click', function () {
+        $.post('/upload/add_material.do', function (data) {
+            $('#upload').html(JSON.stringify(data));
+        })
+    });
+
+    $('#get_material').on('click', function () {
+        $.get('/upload/get_material.do', function (data) {
+            $('#upload').html(JSON.stringify(data));
         })
     });
 </script>
