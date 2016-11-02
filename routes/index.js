@@ -13,6 +13,7 @@ require('../api/weixin');
 router.get('/', function (req, res) {
   // 签名成功
   if (weixin.checkSignature(req)) {
+    console.log('签名验证成功');
     res.status(200).send(req.query.echostr);
   } else {
     res.status(200).send('fail');

@@ -2,16 +2,17 @@
  * Created by Rain on 2016/10/27.
  */
 var express = require('express');
+var app = express();
+
 var path = require('path');
 var bodyParser = require('body-parser');
-
-var app = express();
 
 //router
 var routes = require('./routes/index');
 var token = require('./routes/token');
 var menu = require('./routes/menu');
 var user = require('./routes/user');
+var kfaccount = require('./routes/kfaccount');
 
 // 模版设定
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +27,7 @@ app.use('/', routes);  //管理页面和
 app.use('/token', token);//token 管理
 app.use('/menu', menu);//菜单管理
 app.use('/user', user);//用户管理
+app.use('/kfaccount', kfaccount);//客服管理
 
 
 app.use(function (req, res, next) {

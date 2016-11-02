@@ -89,22 +89,58 @@ weixin.textMsg(function (msg) {
 weixin.imageMsg(function (msg) {
   console.log("imageMsg received");
   console.log(JSON.stringify(msg));
+
+  var resMsg = {
+    fromUserName: msg.toUserName,
+    toUserName: msg.fromUserName,
+    msgType: "text",
+    content: "您发来的图片 我们收到了",
+    funcFlag: 0
+  };
+  weixin.sendMsg(resMsg);
 });
 
 // 监听位置消息
 weixin.locationMsg(function (msg) {
   console.log("locationMsg received");
   console.log(JSON.stringify(msg));
+  var resMsg = {
+    fromUserName: msg.toUserName,
+    toUserName: msg.fromUserName,
+    msgType: "text",
+    content: "您发来的位置我们收到了",
+    funcFlag: 0
+  };
+  weixin.sendMsg(resMsg);
 });
 
 // 监听链接消息
 weixin.urlMsg(function (msg) {
   console.log("urlMsg received");
   console.log(JSON.stringify(msg));
+  var resMsg = {
+    fromUserName: msg.toUserName,
+    toUserName: msg.fromUserName,
+    msgType: "text",
+    content: "您发来的URL 我们收到了",
+    funcFlag: 0
+  };
+  weixin.sendMsg(resMsg);
 });
 
 // 监听事件消息
 weixin.eventMsg(function (msg) {
   console.log("eventMsg received");
+  if (msg.event === 'subscribe') {
+    var resMsg = {
+      fromUserName: msg.toUserName,
+      toUserName: msg.fromUserName,
+      msgType: "text",
+      content: "hello 欢迎来到DanWi",
+      funcFlag: 0
+    };
+    weixin.sendMsg(resMsg);
+  }
+
   console.log(JSON.stringify(msg));
 });

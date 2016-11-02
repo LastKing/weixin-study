@@ -14,6 +14,9 @@
     <input class="btn btn-default" type="button" id="getUser" value="获得用户">
     <p id="user"></p>
 
+    <input class="btn btn-default" type="button" id="addKF" value="添加客服">
+    <p id="kfAccount"></p>
+
 </div>
 
 <% include base/script.ejs %>
@@ -96,10 +99,20 @@
     });
 </script>
 
+<!-- 用户获取 -->
 <script>
     $('#getUser').on('click', function () {
         $.get('/user/get.do', function (data) {
             $('#user').html(JSON.stringify(data));
+        })
+    });
+</script>
+
+<!--  -->
+<script>
+    $('#addKF').on('click', function () {
+        $.post('/kfaccount/add.do', function (data) {
+            $('#kfAccount').html(JSON.stringify(data));
         })
     });
 </script>
