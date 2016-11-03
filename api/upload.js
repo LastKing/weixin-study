@@ -5,12 +5,11 @@ var request = require('superagent');
 
 var AccessToken = require('./accessToken');
 
-var tempUploadBaseUrl = 'https://api.weixin.qq.com/cgi-bin/media';
+const TempUploadBaseUrl = 'https://api.weixin.qq.com/cgi-bin/media';
+const StaticUploadUrl = 'https://api.weixin.qq.com/cgi-bin/material';
 
-var staticUploadUrl = 'https://api.weixin.qq.com/cgi-bin/material';
-
-function tempUpload() {
-  var url = tempUploadBaseUrl + '/upload';
+function uploadTemp() {
+  var url = TempUploadBaseUrl + '/upload';
 
   return new Promise((resolve, reject)=> {
     request.post(url)
@@ -28,8 +27,8 @@ function tempUpload() {
  * @param media_id
  * @returns {Promise} 返回的是一个   文件buffer流，而不是文件地址
  */
-function getTempUpload(media_id) {
-  var url = tempUploadBaseUrl + '/get';
+function getTemp(media_id) {
+  var url = TempUploadBaseUrl + '/get';
 
   return new Promise((resolve, reject)=> {
     request.get(url)
@@ -45,7 +44,7 @@ function getTempUpload(media_id) {
 
 //1.上传图文素材
 function addNews() {
-  var url = staticUploadUrl + '/add_news';
+  var url = StaticUploadUrl + '/add_news';
 
   return new Promise((resolve, reject)=> {
     request.post(url)
@@ -54,11 +53,25 @@ function addNews() {
           err ? reject(err) : resolve(result.text);
         });
   });
-
 }
 
-function upload() {
-  var url = staticUploadUrl + '/add_material';
+//2.修改图文素材
+function updateNew(data) {
+  var url = StaticUploadUrl + '/add_news';
+
+  return new Promise((resolve, reject)=> {
+    request.post(url)
+        .query({access_token: AccessToken.get()})
+        .send(JSON.stringify(data))
+        .end(function (err, result) {
+          err ? reject(err) : resolve(result.text);
+        });
+  });
+}
+
+//3.上传其他 素材
+function uploadMaterial() {
+  var url = StaticUploadUrl + '/add_material';
 
   return new Promise((resolve, reject)=> {
     request.post(url)
@@ -71,42 +84,69 @@ function upload() {
   });
 }
 
-function get_material(media_id) {
-  var url = staticUploadUrl + '/get_material';
-
-  return new Promise((resolve, reject)=> {
-    request.get(url)
-        .query({access_token: AccessToken.get()})
-        .send(JSON.stringify({media_id: media_id}))
-        .end(function (err, result) {
-          err ? reject(err) : resolve(result.body);
-        });
-  });
-}
-
-function getStaticCount() {
-  var url = staticUploadUrl + '/get_materialcount';
-
-  return new Promise((resolve, reject)=> {
-    request.get(url)
-        .query({access_token: AccessToken.get()})
-        .end(function (err, result) {
-          err ? reject(err) : resolve(result.text);
-        });
-  });
-}
-
-function getAll() {
-  var url = staticUploadUrl + '/batchget_material';
+//4.获取上传素材
+function getMaterial(media_id) {
+  var url = StaticUploadUrl + '/get_material';
 
   return new Promise((resolve, reject)=> {
     request.post(url)
         .query({access_token: AccessToken.get()})
+        .send({media_id: media_id})
         .end(function (err, result) {
           err ? reject(err) : resolve(result.text);
         });
   });
 }
 
+//5.删除上传素材按钮
+function delMaterial(media_id) {
+  var url = StaticUploadUrl + '/del_material';
 
-module.exports = {tempUpload, getTempUpload, get_material, addNews, getStaticCount, getAll};
+  return new Promise((resolve, reject)=> {
+    request.post(url)
+        .query({access_token: AccessToken.get()})
+        .send({media_id: media_id})
+        .end(function (err, result) {
+          err ? reject(err) : resolve(result.text);
+        });
+  });
+}
+
+//6.获取素材总数（只有永久素材）
+function getStaticCount() {
+  var url = StaticUploadUrl + '/get_materialcount';
+
+  return new Promise((resolve, reject)=> {
+    request.get(url)
+        .query({access_token: AccessToken.get()})
+        .end(function (err, result) {
+          err ? reject(err) : resolve(result.text);
+        });
+  });
+}
+
+//7.批量获取  （只有永久素材）
+function getBatchMaterial(type, offset, count) {
+  var url = StaticUploadUrl + '/batchget_material';
+
+  return new Promise((resolve, reject)=> {
+    request.post(url)
+        .query({access_token: AccessToken.get()})
+        .send(JSON.stringify({type, offset, count}))
+        .end(function (err, result) {
+          err ? reject(err) : resolve(result.text);
+        });
+  });
+}
+
+module.exports = {
+  uploadTemp,
+  getTemp,
+  addNews,
+  updateNew,
+  uploadMaterial,
+  getMaterial,
+  delMaterial,
+  getStaticCount,
+  getBatchMaterial
+};
