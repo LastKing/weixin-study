@@ -25,6 +25,11 @@
     <input class="btn btn-default" type="button" id="getBatchMaterial" value="获取素材列表">
     <p id="upload" style="word-break:break-all"></p>
 
+    <input class="btn btn-default" type="button" id="createTemp" value="创建临时二维码">
+    <input class="btn btn-default" type="button" id="createStatic" value="创建永久二维码">
+    <input class="btn btn-default" type="button" id="getQrcode" value="获取二维码">
+    <p id="qrcode" style="word-break:break-all"></p>
+
 </div>
 
 <% include base/script.ejs %>
@@ -167,6 +172,25 @@
             str += `<br/>item_count:${data.total_count}`;
             $('#upload').html(str);
         }, 'json')
+    });
+</script>
+
+<script>
+    $('#createTemp').on('click', function () {
+        $.post('/qrcode/createTemp.do', function (data) {
+            $('#qrcode').html(JSON.stringify(data));
+        });
+    });
+    $('#createStatic').on('click', function () {
+        $.post('/qrcode/createStatic.do', function (data) {
+            $('#qrcode').html(JSON.stringify(data));
+        });
+    });
+
+    $('#getQrcode').on('click', function () {
+        $.get('/qrcode/get.do', function (data) {
+            $('#qrcode').html(`<img src=${JSON.stringify(data)}>`);
+        });
     });
 </script>
 
