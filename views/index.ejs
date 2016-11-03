@@ -30,6 +30,9 @@
     <input class="btn btn-default" type="button" id="getQrcode" value="获取二维码">
     <p id="qrcode" style="word-break:break-all"></p>
 
+    <input class="btn btn-default" type="button" id="getUserSummary" value="获得用户增加总数">
+    <p id="datacube" style="word-break:break-all"></p>
+
 </div>
 
 <% include base/script.ejs %>
@@ -175,6 +178,7 @@
     });
 </script>
 
+<!-- qrcode script-->
 <script>
     $('#createTemp').on('click', function () {
         $.post('/qrcode/createTemp.do', function (data) {
@@ -186,12 +190,21 @@
             $('#qrcode').html(JSON.stringify(data));
         });
     });
-
     $('#getQrcode').on('click', function () {
         $.get('/qrcode/get.do', function (data) {
             $('#qrcode').html(`<img src=${JSON.stringify(data)}>`);
         });
     });
 </script>
+
+<!-- datacube srcript -->
+<script>
+    $('#getUserSummary').on('click', function () {
+        $.post('/datacube/getUserSummary.do', function (data) {
+            $('#datacube').html(JSON.stringify(data));
+        });
+    });
+</script>
+
 
 <% include base/footer.ejs %>
